@@ -1,0 +1,112 @@
+{
+  "apiVersion" : "v1",
+  "kind" : "Template",
+  "labels" : { },
+  "metadata" : {
+    "annotations" : {
+      "fabric8.hisesb/iconUrl" : "https://cdn.rawgit.com/fabric8io/fabric8/master/fabric8-maven-plugin/src/main/resources/icons/camel.svg"
+    },
+    "labels" : { },
+    "name" : "hisesb"
+  },
+  "objects" : [ {
+    "apiVersion" : "v1",
+    "kind" : "Service",
+    "metadata" : {
+      "annotations" : { },
+      "labels" : {
+        "project" : "hisesb",
+        "component" : "hisesb",
+        "container" : "java",
+        "provider" : "fabric8",
+        "group" : "healthcaredemo",
+        "version" : "1.0.0-SNAPSHOT"
+      },
+      "name" : "hisesb"
+    },
+    "spec" : {
+      "deprecatedPublicIPs" : [ ],
+      "externalIPs" : [ ],
+      "ports" : [ {
+        "port" : 80,
+        "protocol" : "TCP",
+        "targetPort" : 9123
+      } ],
+      "selector" : {
+        "project" : "hisesb",
+        "component" : "hisesb",
+        "container" : "java",
+        "provider" : "fabric8",
+        "group" : "healthcaredemo"
+      }
+    }
+  }, {
+    "apiVersion" : "v1",
+    "kind" : "ReplicationController",
+    "metadata" : {
+      "annotations" : { },
+      "labels" : {
+        "project" : "hisesb",
+        "component" : "hisesb",
+        "container" : "java",
+        "provider" : "fabric8",
+        "group" : "healthcaredemo",
+        "version" : "1.0.0-SNAPSHOT"
+      },
+      "name" : "hisesb"
+    },
+    "spec" : {
+      "replicas" : 1,
+      "selector" : {
+        "project" : "hisesb",
+        "component" : "hisesb",
+        "container" : "java",
+        "provider" : "fabric8",
+        "group" : "healthcaredemo",
+        "version" : "1.0.0-SNAPSHOT"
+      },
+      "template" : {
+        "metadata" : {
+          "annotations" : { },
+          "labels" : {
+            "project" : "hisesb",
+            "component" : "hisesb",
+            "container" : "java",
+            "provider" : "fabric8",
+            "group" : "healthcaredemo",
+            "version" : "1.0.0-SNAPSHOT"
+          }
+        },
+        "spec" : {
+          "containers" : [ {
+            "args" : [ ],
+            "command" : [ ],
+            "env" : [ {
+              "name" : "A_MQ_SERVICE_NAME",
+              "value" : "BROKER_AMQ_TCP"
+            }, {
+              "name" : "KUBERNETES_NAMESPACE",
+              "valueFrom" : {
+                "fieldRef" : {
+                  "fieldPath" : "metadata.namespace"
+                }
+              }
+            } ],
+            "image" : "fabric8/hisesb:1.0.0-SNAPSHOT",
+            "name" : "hisesb",
+            "ports" : [ {
+              "containerPort" : 8778,
+              "name" : "jolokia"
+            } ],
+            "securityContext" : { },
+            "volumeMounts" : [ ]
+          } ],
+          "imagePullSecrets" : [ ],
+          "nodeSelector" : { },
+          "volumes" : [ ]
+        }
+      }
+    }
+  } ],
+  "parameters" : [ ]
+}

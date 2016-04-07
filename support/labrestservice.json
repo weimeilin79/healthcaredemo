@@ -1,0 +1,43 @@
+{
+    "kind": "Service",
+    "apiVersion": "v1",
+    "metadata": {
+        "name": "labrestservice",
+        "namespace": "demo",
+        "selfLink": "/api/v1/namespaces/demo/services/labrestservice",
+        "uid": "281c47bd-f2c7-11e5-a5de-525400d0cdc3",
+        "resourceVersion": "22061",
+        "creationTimestamp": "2016-03-25T20:21:29Z",
+        "labels": {
+            "component": "labrestservice",
+            "container": "java",
+            "group": "healthcaredemo",
+            "project": "laboratoryservice",
+            "provider": "fabric8",
+            "version": "1.0.0-SNAPSHOT"
+        }
+    },
+    "spec": {
+        "ports": [
+            {
+                "protocol": "TCP",
+                "port": 8081,
+                "targetPort": 8081
+            }
+        ],
+        "selector": {
+            "component": "laboratoryservice",
+            "container": "java",
+            "group": "healthcaredemo",
+            "project": "laboratoryservice",
+            "provider": "fabric8"
+        },
+        "portalIP": "172.30.76.122",
+        "clusterIP": "172.30.76.122",
+        "type": "ClusterIP",
+        "sessionAffinity": "None"
+    },
+    "status": {
+        "loadBalancer": {}
+    }
+}

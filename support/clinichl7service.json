@@ -1,0 +1,44 @@
+{
+    "kind": "Service",
+    "apiVersion": "v1",
+    "metadata": {
+        "name": "clinic-hl7-service",
+        "namespace": "demo",
+        "selfLink": "/api/v1/namespaces/demo/services/clinic-hl7-service",
+        "uid": "5b97ee95-f2c1-11e5-a5de-525400d0cdc3",
+        "resourceVersion": "21578",
+        "creationTimestamp": "2016-03-31T19:39:58Z",
+        "labels": {
+            "component": "clinic-hl7-service",
+            "container": "java",
+            "group": "healthcaredemo",
+            "project": "clinicservice",
+            "provider": "fabric8",
+            "version": "1.0.0-SNAPSHOT"
+        }
+    },
+    "spec": {
+        "ports": [
+            {
+                "protocol": "TCP",
+                "port": 8889,
+                "targetPort": 8889
+            }
+        ],
+        "selector": {
+            "component": "clinicservice",
+            "container": "java",
+            "group": "healthcaredemo",
+            "project": "clinicservice",
+            "provider": "fabric8",
+            "version": "1.0.0-SNAPSHOT"
+        },
+        "portalIP": "172.30.9.19",
+        "clusterIP": "172.30.9.19",
+        "type": "ClusterIP",
+        "sessionAffinity": "None"
+    },
+    "status": {
+        "loadBalancer": {}
+    }
+}

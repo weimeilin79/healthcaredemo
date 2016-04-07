@@ -1,0 +1,81 @@
+{
+    "kind": "DeploymentConfig",
+    "apiVersion": "v1",
+    "metadata": {
+        "name": "healthcareweb",
+        "namespace": "demo",
+        "selfLink": "/oapi/v1/namespaces/demo/deploymentconfigs/healthcareweb",
+        "labels": {
+            "app": "healthcareweb"
+        },
+        "annotations": {
+            "openshift.io/generated-by": "OpenShiftWebConsole"
+        }
+    },
+    "spec": {
+        "strategy": {
+            "type": "Rolling",
+            "rollingParams": {
+                "updatePeriodSeconds": 1,
+                "intervalSeconds": 1,
+                "timeoutSeconds": 600,
+                "maxUnavailable": "25%",
+                "maxSurge": "25%"
+            },
+            "resources": {}
+        },
+        "triggers": [
+            {
+                "type": "ImageChange",
+                "imageChangeParams": {
+                    "automatic": true,
+                    "containerNames": [
+                        "healthcareweb"
+                    ],
+                    "from": {
+                        "kind": "ImageStreamTag",
+                        "name": "healthcareweb:latest"
+                    }
+                }
+            },
+            {
+                "type": "ConfigChange"
+            }
+        ],
+        "replicas": 1,
+        "selector": {
+            "deploymentconfig": "healthcareweb"
+        },
+        "template": {
+            "metadata": {
+                "creationTimestamp": null,
+                "labels": {
+                    "app": "healthcareweb",
+                    "deploymentconfig": "healthcareweb"
+                }
+            },
+            "spec": {
+                "containers": [
+                    {
+                        "name": "healthcareweb",
+                        "image": "healthcareweb:latest",
+                        "ports": [
+                            {
+                                "containerPort": 8080,
+                                "protocol": "TCP"
+                            }
+                        ],
+                        "resources": {},
+                        "terminationMessagePath": "/dev/termination-log",
+                        "imagePullPolicy": "Always"
+                    }
+                ],
+                "restartPolicy": "Always",
+                "terminationGracePeriodSeconds": 30,
+                "dnsPolicy": "ClusterFirst",
+                "securityContext": {}
+            }
+        }
+    },
+    "status": {}
+}
