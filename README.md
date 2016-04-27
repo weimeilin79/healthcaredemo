@@ -30,6 +30,7 @@ Through a normal medical visit in the demo.
 Installation
 ----------------------------------
 Make sure you have installed Vagrant and Virtual box. run init.sh to setup CDK and web services
+    
     $ ./init.sh
 
 Under project directory ./projects/healthcaredemo
