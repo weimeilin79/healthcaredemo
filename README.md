@@ -8,10 +8,11 @@ and ensures security, modularity of services and flexibility.
 Here is an example demo that shows how to achieve this with JBoss Fuse on OpenShift. 
 
 In this demo, we will be simulating Four different departments that are typically in hospital. 
--Registration
--Clinic
--Laboratory
--Radiology 
+
+- Registration
+- Clinic
+- Laboratory
+- Radiology 
 
 And a party that is very common outside the hospital itself, 
 
