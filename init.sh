@@ -11,6 +11,9 @@ CDK_PLUGINS_DIR=$CDK_HOME/cdk/plugins
 CDK=cdk-2.0.0-beta5.zip
 OSX_BOX=rhel-cdk-kubernetes-7.2-21.x86_64.vagrant-virtualbox.box
 LINUX_BOX=rhel-cdk-kubernetes-7.2-21.x86_64.vagrant-libvirt.box
+OSX_CLIENT=oc-3.1.1.6-macosx.tar.gz
+LINUX_CLIENT=oc-3.1.1.6-linux.tar.gz
+OSE_CLIENT_PATH=ose-clients-3.1.1.6
 VAGRANTFILE=VagrantFile-rhel-ose
 CDK_BOX_VERSION=cdkv2
 VERSION=2.0.0-beta5
@@ -21,7 +24,7 @@ clear
 echo
 echo "###########################################################################"
 echo "##                                                                       ##"   
-echo "##  Setting up the ${DEMO}                          ##"
+echo "##  Setting up the ${DEMO}                                 ##"
 echo "##                                                                       ##"   
 echo "##                                                                       ##"   
 echo "##   ##### #   # ##### #####                                             ##"
@@ -42,7 +45,7 @@ echo "##   # # # ##### ##### #   #   #   #     #####                           #
 echo "##       # #     #  #   # #    #   #     #                               ##"
 echo "##   ##### ##### #   #   #   ##### ##### #####                           ##"
 echo "##                                                                       ##"
-echo "##  brought to you by ${AUTHORS}         ##"
+echo "##  brought to you by ${AUTHORS}     ##"
 echo "##                                                                       ##"   
 echo "##  ${PROJECT}            ##"
 echo "##                                                                       ##"   
@@ -99,6 +102,33 @@ else
   fi
 fi
 
+# Ensure correct OpenShift Client downloaded.
+#
+if [[ `uname` == 'Darwin' ]]; then
+	# OSX OpenShift Client.
+	if [[ -r $SRC_DIR/$OSX_CLIENT ]] || [[ -L $SRC_DIR/$OSX_CLIENT ]]; then
+		echo OSX OpenShift Client present...
+	  echo
+  else
+	  echo Need to download $OSX_CLIENT from the Customer Portal 
+	  echo and place it in the $SRC_DIR directory to proceed...
+	  echo
+	  exit
+  fi
+else
+	# Linux OpenShift Client.
+	if [[ -r $SRC_DIR/$LINUX_CLIENT ]] || [[ -L $SRC_DIR/$LINUX_CLIENT ]]; then
+		echo Linux OpenShift Client present...
+	  echo
+  else
+	  echo Need to download $LINUX_CLIENT from the Customer Portal 
+	  echo and place it in the $SRC_DIR directory to proceed...
+	  echo
+	  exit
+  fi
+fi
+
+
 # Remove the old insallation, if it exists.
 #
 if [[ -x $CDK_HOME ]]; then
@@ -123,7 +153,7 @@ cp $SUPPORT_DIR/$VAGRANTFILE $CDK_HOME/cdk/components/rhel/rhel-ose/Vagrantfile
 echo "Installing some Vagrant plugins..."
 echo
 cd $CDK_PLUGINS_DIR
-vagrant plugin install vagrant-registration vagrant-service-manager
+vagrant plugin install vagrant-registration vagrant-service-manager vagrant-adbinfo
 
 echo
 echo "Checking that plugins installed, looking for:"
@@ -142,6 +172,13 @@ if [[ `uname` == 'Darwin' ]]; then
   echo "Adding the RHEL Vagrant box..."
   echo
   vagrant box add --name $CDK_BOX_VERSION $SRC_DIR/$OSX_BOX
+  echo
+  echo "Unzipping MAC OpenShift Client"
+  echo
+  tar xopf $SRC_DIR/$OSX_CLIENT
+  export PATH=$PATH:mnt/redhat/staging-cds/$OSE_CLIENT_PATH/usr/share/atomic-openshift/macosx/
+	echo $PATH
+	
 else 
 	# Linux Vagrant box.
 	#
@@ -149,6 +186,12 @@ else
   echo "Adding the libvirt Vagrant box..."
   echo
   vagrant box add --name $CDK_BOX_VERSION $SRC_DIR/$LINUX_BOX
+  echo
+  echo "Unzipping LINUX OpenShift Client"
+  echo
+  tar xopf $SRC_DIR/$LINUX_CLIENT
+  export PATH=$PATH:mnt/redhat/staging-cds/$OSE_CLIENT_PATH/usr/share/atomic-openshift/linux
+	echo $PATH
 fi
 
 if [ $? -ne 0 ]; then
@@ -189,6 +232,7 @@ echo
 cd $CDK_HOME/cdk/components/rhel/rhel-ose
 vagrant up
 
+
 # Start adding application related projects
 cd ../../../../..
 
@@ -216,7 +260,27 @@ oc create -f $SUPPORT_DIR/amq.json
 echo
 echo "Install Healthcare web php application"
 echo 
-oc new-app --image-stream=openshift/php:latest --name=heathcareweb --code=https://github.com/weimeilin79/healthcareweb.git
+oc new-app --image-stream=openshift/php:latest --name=healthcareweb --code=https://github.com/weimeilin79/healthcareweb.git
+
+echo
+echo "Install Health web route"
+echo
+oc create -f $SUPPORT_DIR/healthwebroute.json
+
+echo 
+echo "Configure shell OpenShift"
+echo
+cd $CDK_HOME/cdk/components/rhel/rhel-ose
+eval "$(vagrant adbinfo)"
+
+echo 
+echo "Restart OpenShift"
+echo
+vagrant provision
+
+# Start adding application related projects
+cd ../../../../..
+
 
 echo
 echo "========================================================================="
@@ -226,7 +290,8 @@ echo "=  Under project directory ./projects/healthcaredemo                    ="
 echo "=                                                                       ="
 echo "=     $ mvn -Pf8-local-deploy                                           ="
 echo "=                                                                       ="
-echo "=  After projects are depolyed, we want to create two extra services    ="
+echo "=  After projects are depolyed, go back to the demo root directory      ="
+echo "=  (where the init.sh is) we want to create two extra services          ="
 echo "=                                                                       ="
 echo "=     $ oc create -f support/clinichl7service.json                      ="
 echo "=     $ oc create -f support/labrestservice.json                        ="
@@ -248,4 +313,3 @@ echo "=  This completes the $DEMO setup.                           ="
 echo "=                                                                       ="
 echo "========================================================================="
 echo                                                                    
-
