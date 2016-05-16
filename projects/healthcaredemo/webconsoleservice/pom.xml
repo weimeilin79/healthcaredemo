@@ -15,6 +15,8 @@
     
     <!-- http ports that are opened! -->
     <http.port>8080</http.port>
+    
+    <fuse.version>6.3.0.redhat-067</fuse.version>
 
     <!-- Docker & Fabric8 Configs -->
     <docker.from>jboss-fuse-6/fis-java-openshift:1.0</docker.from>
@@ -40,12 +42,20 @@
   </properties>
   
  
-  <dependencies>
-    
+ 	<dependencies>
+    <dependency>
+      <groupId>org.apache.camel</groupId>
+      <artifactId>camel-core</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.camel</groupId>
+      <artifactId>camel-spring</artifactId>
+    </dependency>
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-hl7</artifactId>
     </dependency>
+    
    	<!-- For Web Service with CXF -->
 	 	<dependency>
       <groupId>org.apache.camel</groupId>
@@ -53,21 +63,45 @@
     </dependency>
 		
 		<dependency>
-		    <groupId>org.apache.cxf</groupId>
-		    <artifactId>cxf-rt-frontend-jaxrs</artifactId>
+	    <groupId>org.apache.cxf</groupId>
+	    <artifactId>cxf-rt-frontend-jaxrs</artifactId>
 		</dependency>
 	
 		<dependency>
-		    <groupId>org.apache.cxf</groupId>
-		    <artifactId>cxf-rt-transports-http-jetty</artifactId>
+	    <groupId>org.apache.cxf</groupId>
+	    <artifactId>cxf-rt-transports-http-jetty</artifactId>
+		</dependency>
+	
+		<!-- swagger api -->
+    <dependency>
+      <groupId>org.apache.camel</groupId>
+      <artifactId>camel-swagger-java</artifactId>
+    </dependency>
+    <dependency>
+      	<groupId>org.apache.camel</groupId>
+    	<artifactId>camel-jetty9</artifactId>
+    </dependency>
+    <dependency>
+			<groupId>org.eclipse.jetty</groupId>
+			<artifactId>jetty-server</artifactId>
 		</dependency>
 		<dependency>
-		    <groupId>org.apache.camel</groupId>
-		    <artifactId>camel-jetty</artifactId>
-		    <version>2.15.1.redhat-621084</version>
-		</dependency>	
-	
+			<groupId>org.eclipse.jetty</groupId>
+			<artifactId>jetty-http</artifactId>
+		</dependency>
 		<dependency>
+			<groupId>org.eclipse.jetty</groupId>
+			<artifactId>jetty-util</artifactId>
+		</dependency>
+	
+    
+    <!-- we need spring web -->
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-web</artifactId>
+    </dependency>
+    
+	  <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-jackson</artifactId>
     </dependency>
@@ -85,7 +119,30 @@
    	<dependency>
       <groupId>io.fabric8.mq</groupId>
       <artifactId>mq-client</artifactId>
-    </dependency>   
+    </dependency>
+    
+    
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-log4j12</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>log4j</groupId>
+      <artifactId>log4j</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.camel</groupId>
+      <artifactId>camel-test-spring</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.camel</groupId>
+      <artifactId>camel-netty4</artifactId>
+    </dependency>
   </dependencies>
   
   <build>  

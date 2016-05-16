@@ -8,9 +8,9 @@ SRC_DIR=./installs
 SUPPORT_DIR=./support
 PRJ_DIR=./projects
 CDK_PLUGINS_DIR=$CDK_HOME/cdk/plugins
-CDK=cdk-2.0.0-beta5.zip
-OSX_BOX=rhel-cdk-kubernetes-7.2-21.x86_64.vagrant-virtualbox.box
-LINUX_BOX=rhel-cdk-kubernetes-7.2-21.x86_64.vagrant-libvirt.box
+CDK=cdk-2.0.0.zip
+OSX_BOX=rhel-cdk-kubernetes-7.2-23.x86_64.vagrant-virtualbox.box
+LINUX_BOX=rhel-cdk-kubernetes-7.2-23.x86_64.vagrant-libvirt.box
 OSX_CLIENT=oc-3.1.1.6-macosx.tar.gz
 LINUX_CLIENT=oc-3.1.1.6-linux.tar.gz
 OSE_CLIENT_PATH=ose-clients-3.1.1.6
@@ -153,13 +153,15 @@ cp $SUPPORT_DIR/$VAGRANTFILE $CDK_HOME/cdk/components/rhel/rhel-ose/Vagrantfile
 echo "Installing some Vagrant plugins..."
 echo
 cd $CDK_PLUGINS_DIR
-vagrant plugin install vagrant-registration vagrant-service-manager vagrant-adbinfo
-
+vagrant plugin install vagrant-registration vagrant-adbinfo
+vagrant plugin install --plugin-version=1.0.1 vagrant-service-manager
 echo
 echo "Checking that plugins installed, looking for:"
 echo 
 echo "  -> vagrant-registration"
 echo "  -> vagrant-service-manager"
+echo "  -> vagrant-adbinfo"
+echo "  -> vagrant-sshfs"
 echo
 vagrant plugin list
 
@@ -257,15 +259,11 @@ echo "Install AMQ"
 echo
 oc create -f $SUPPORT_DIR/amq.json
 
-echo
-echo "Install Healthcare web php application"
-echo 
-oc new-app --image-stream=openshift/php:latest --name=healthcareweb --code=https://github.com/weimeilin79/healthcareweb.git
 
 echo
-echo "Install Health web route"
+echo "Install Swagger"
 echo
-oc create -f $SUPPORT_DIR/healthwebroute.json
+oc new-app openshift/swagger-ui-site
 
 echo 
 echo "Configure shell OpenShift"
@@ -299,6 +297,14 @@ echo "=                                                                       ="
 echo "=  Also expose a new route for the Lab Rest API Service                 ="
 echo "=                                                                       ="
 echo "=     $ oc create -f support/labrestapi.json                            ="
+echo "=                                                                       ="
+echo "=  Install GUI page and frontend for healthcare install                 ="
+echo "=                                                                       ="
+echo "=     $ oc new-app --image-stream=openshift/php:5.5 --name=healthcareweb --code=https://github.com/weimeilin79/healthcareweb.git "
+echo "=                                                                       ="
+echo "=  Install GUI page and frontend for healthcare install                 ="
+echo "=                                                                       ="
+echo "=     $ oc create -f support/healthwebroute.json                        ="
 echo "=                                                                       ="
 echo "=  Login to OpenShift console with USERNAME/PWD admin/admin             ="
 echo "=                                                                       ="

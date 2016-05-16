@@ -14,11 +14,11 @@
   <modules>
   	<module>clinicservice</module>
   	<module>fhiresb</module>
-		<module>hisesb</module>
-		<module>laboratoryservice</module>
-		<module>radiologyservice</module>
-		<module>registryservice</module>
-		<module>webconsoleservice</module>		
+	<module>hisesb</module>
+	<module>laboratoryservice</module>
+	<module>radiologyservice</module>
+	<module>registryservice</module>
+	<module>webconsoleservice</module>		
   </modules>
 
   <properties>
@@ -27,6 +27,7 @@
     
     <!-- the version of the BOM, defining all the dependency versions -->
     <fuse.version>6.2.1.redhat-084</fuse.version>
+    
     <activemq.version>5.11.0.redhat-621084</activemq.version>
     <fabric8.version>2.2.0.redhat-079</fabric8.version>
     <docker.maven.plugin.version>0.13.6</docker.maven.plugin.version>
