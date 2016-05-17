@@ -46,6 +46,15 @@ After projects are depolyed, go back to the demo root directory (where the init.
 Also expose a new route for the Lab Rest API Service                 
 
     $ oc create -f support/labrestapi.json                            
+    
+
+Install GUI page and frontend for healthcare install 
+	
+		$ oc new-app --image-stream=openshift/php:5.5 --name=healthcareweb --code=https://github.com/weimeilin79/healthcareweb.git
+
+Install GUI page and frontend for healthcare install
+		
+		$ oc create -f support/healthwebroute.json                       
 
 Login to OpenShift console with USERNAME/PWD admin/admin             
 
